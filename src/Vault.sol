@@ -9,6 +9,7 @@ import { AccessControl } from "@openzeppelin/contracts/access/AccessControl.sol"
 contract Vault is Pausable, Ownable, AccessControl {
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
     mapping(address => bool) private whitelistedTokens;
+    mapping(address => mapping(address => uint256)) private userBalances;
 
     constructor() {
         // Set the deployer as the default admin
@@ -22,8 +23,12 @@ contract Vault is Pausable, Ownable, AccessControl {
         _;
     }
 
-    /** Mutate functions */
+    /** View functions */
+    function getBalance(address user, address token) returns (uint256) {
+        return userBalances[user][token];
+    }
 
+    /** Mutate functions */
     /**
      * Allows users to deposit ERC20 tokens into the vault.
      * The contract must not be paused, and the token must be whitelisted.
@@ -32,7 +37,9 @@ contract Vault is Pausable, Ownable, AccessControl {
      */
     function deposit(address token, uint256 amount) external whenNotPaused {
         require(whitelistedTokens[token], "Token not whitelisted");
-        IERC20(token).transferFrom(msg.sender, address(this), amount);
+        require(IERC20(token).transferFrom(msg.sender, address(this), amount), "Transfer failed");
+
+        userBalances[msg.sender][token] += amount;
     }
 
     /**
@@ -43,7 +50,10 @@ contract Vault is Pausable, Ownable, AccessControl {
      */
     function withdraw(address token, uint256 amount) external whenNotPaused {
         require(whitelistedTokens[token], "Token not whitelisted");
-        IERC20(token).transfer(msg.sender, amount);
+        require(userBalances[msg.sender][token] >= amount, "Insufficient balance");
+        userBalances[msg.sender][token] -= amount;
+
+        require(IERC20(token).transfer(msg.sender, amount), "Transfer failed");
     }
 
     /** Admin functions */
