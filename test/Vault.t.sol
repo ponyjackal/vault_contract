@@ -66,6 +66,32 @@ contract VaultTest is Test {
         assertEq(token.balanceOf(user), 1000 ether - depositAmount + withdrawAmount);
     }
 
+    function testWithdrawMoreThanDeposit() public {
+        // Set the amount to be deposited and the amount to be withdrawn.
+        // The withdraw amount is intentionally set higher than the deposit amount to test the validation.
+        uint256 depositAmount = 100 ether;
+        uint256 withdrawAmount = 150 ether;
+
+        // Simulate the user approving the Vault to spend their tokens.
+        // This is necessary for the Vault to be able to pull tokens from the user's account.
+        vm.prank(user);
+        token.approve(address(vault), depositAmount);
+
+        // Simulate the user depositing tokens into the Vault.
+        // The user's balance in the Vault should now be equal to the deposit amount.
+        vm.prank(user);
+        vault.deposit(address(token), depositAmount);
+
+        // Expect the next transaction to revert with a specific error message.
+        // This is because the user is trying to withdraw more tokens than what they have deposited.
+        vm.expectRevert("Insufficient balance");
+
+        // Simulate the user attempting to withdraw more tokens than they have deposited.
+        // The test expects this transaction to fail and revert.
+        vm.prank(user);
+        vault.withdraw(address(token), withdrawAmount);
+    }
+
     function testPauseAndUnpause() public {
         // Pause the vault
         vault.pause();

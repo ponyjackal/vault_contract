@@ -24,8 +24,12 @@ contract Vault is Pausable, Ownable, AccessControl {
     }
 
     /** View functions */
-    function getBalance(address user, address token) returns (uint256) {
+    function getBalance(address user, address token) external view returns (uint256) {
         return userBalances[user][token];
+    }
+
+    function isWhitelisted(address token) external view returns (bool) {
+        return whitelistedTokens[token];
     }
 
     /** Mutate functions */
@@ -78,7 +82,7 @@ contract Vault is Pausable, Ownable, AccessControl {
      * @param token The address of the ERC20 token to whitelist.
      * @param status Boolean representing whether to add (true) or remove (false) the token from the whitelist.
      */
-    function whitelistToken(address token, bool status) external onlyRole(ADMIN_ROLE) {
+    function whitelistToken(address token, bool status) external onlyAdmin {
         whitelistedTokens[token] = status;
     }
 
@@ -88,7 +92,7 @@ contract Vault is Pausable, Ownable, AccessControl {
      * @param account The address of the account to modify admin privileges for.
      * @param isGrant Boolean indicating whether to grant (true) or revoke (false) the admin role.
      */
-    function modifyAdminRole(address account, bool isGrant) public onlyRole(DEFAULT_ADMIN_ROLE) {
+    function modifyAdminRole(address account, bool isGrant) external onlyAdmin {
         if (isGrant) {
             grantRole(ADMIN_ROLE, account);
         } else {
