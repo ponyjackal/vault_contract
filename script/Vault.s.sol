@@ -7,7 +7,6 @@ import "forge-std/console.sol";
 
 /// @dev See the Solidity Scripting tutorial: https://book.getfoundry.sh/tutorials/solidity-scripting
 contract DeployVault is Script {
-    UUPSProxy proxy;
     Vault internal vault;
 
     function run() public {

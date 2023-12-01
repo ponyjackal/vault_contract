@@ -10,9 +10,6 @@ contract Vault is Pausable, Ownable, AccessControl {
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
     mapping(address => bool) private whitelistedTokens;
 
-    bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
-    mapping(address => bool) private whitelistedTokens;
-
     constructor() {
         // Set the deployer as the default admin
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);

@@ -299,9 +299,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prb/foundry-template@workspace:.":
+"@ponyjackal/vault_contract@workspace:.":
   version: 0.0.0-use.local
-  resolution: "@prb/foundry-template@workspace:."
+  resolution: "@ponyjackal/vault_contract@workspace:."
   dependencies:
     "@commitlint/cli": ^17.1.2
     "@commitlint/config-conventional": ^17.1.0
