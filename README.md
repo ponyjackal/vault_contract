@@ -21,7 +21,7 @@ whitelisted tokens.
 ## Contracts
 
 - `Vault.sol`: Main contract allowing for deposits, withdrawals, and administrative functions.
-- `MockERC20.sol`: A mock ERC20 token used for testing purposes.
+- `MockToken.sol`: A mock ERC20 token used for testing purposes.
 - Other dependencies and libraries as per project requirements.
 
 ### Git Hooks
